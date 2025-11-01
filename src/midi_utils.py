@@ -33,6 +33,10 @@ def midi_to_kc_kf(midi_note):
     # Adjust MIDI note by -1 to align octaves (prevent underflow)
     adjusted_midi = midi_note - 1 if midi_note > 0 else 0
     midi_octave = (adjusted_midi // 12) - 1
+    
+    # Clamp octave to valid range (0-7 for YM2151)
+    midi_octave = max(0, min(7, midi_octave))
+    
     note_in_octave = adjusted_midi % 12
     ym_note = note_table[note_in_octave]
     

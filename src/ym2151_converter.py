@@ -18,12 +18,14 @@ def convert_to_ym2151_log(midi_events_data):
         dict: YM2151 log with event_count and events list
     """
     ticks_per_beat = midi_events_data['ticks_per_beat']
-    tempo_bpm = midi_events_data['tempo_bpm']
+    current_tempo_bpm = midi_events_data['tempo_bpm']
     midi_events = midi_events_data['events']
     
     ym2151_events = []
     
     # Initialize all channels at time 0
+    # Register 0x08 is the Key ON/OFF register
+    # Writing channel number turns off that channel
     for ch in range(8):
         ym2151_events.append({
             'time': 0,
@@ -36,24 +38,28 @@ def convert_to_ym2151_log(midi_events_data):
     ym2151_events.extend(initialize_channel_events(0, 0))
     
     # Process MIDI events
-    active_notes = {}  # Track active notes per channel
+    active_notes = {}  # Track active notes: key is note number only
+    ym2151_channel = 0  # Use YM2151 channel 0 for all notes (mono)
     
     for event in midi_events:
-        if event['type'] == 'note_on':
+        # Update tempo if tempo change event
+        if event['type'] == 'tempo':
+            current_tempo_bpm = event['tempo_bpm']
+            
+        elif event['type'] == 'note_on':
             sample_time = ticks_to_samples(
                 event['ticks'],
                 ticks_per_beat,
-                tempo_bpm
+                current_tempo_bpm
             )
             
-            channel = 0  # Use channel 0 for now (mono)
             note = event['note']
             kc, kf = midi_to_kc_kf(note)
             
             # Set KC (Key Code)
             ym2151_events.append({
                 'time': sample_time,
-                'addr': f'0x{0x28 + channel:02X}',
+                'addr': f'0x{0x28 + ym2151_channel:02X}',
                 'data': f'0x{kc:02X}',
                 'is_data': 0
             })
@@ -61,41 +67,40 @@ def convert_to_ym2151_log(midi_events_data):
             # Set KF (Key Fraction)
             ym2151_events.append({
                 'time': sample_time,
-                'addr': f'0x{0x30 + channel:02X}',
+                'addr': f'0x{0x30 + ym2151_channel:02X}',
                 'data': f'0x{kf:02X}',
                 'is_data': 0
             })
             
-            # Key ON
+            # Key ON (0x78 = all operators on)
             ym2151_events.append({
                 'time': sample_time,
                 'addr': '0x08',
-                'data': f'0x{0x78 | channel:02X}',
+                'data': f'0x{0x78 | ym2151_channel:02X}',
                 'is_data': 0
             })
             
-            active_notes[(event['channel'], note)] = True
+            active_notes[note] = True
             
         elif event['type'] == 'note_off':
             sample_time = ticks_to_samples(
                 event['ticks'],
                 ticks_per_beat,
-                tempo_bpm
+                current_tempo_bpm
             )
             
-            channel = 0  # Use channel 0 for now (mono)
             note = event['note']
             
-            if (event['channel'], note) in active_notes:
+            if note in active_notes:
                 # Key OFF
                 ym2151_events.append({
                     'time': sample_time,
                     'addr': '0x08',
-                    'data': f'0x{channel:02X}',
+                    'data': f'0x{ym2151_channel:02X}',
                     'is_data': 0
                 })
                 
-                del active_notes[(event['channel'], note)]
+                del active_notes[note]
     
     return {
         'event_count': len(ym2151_events),
