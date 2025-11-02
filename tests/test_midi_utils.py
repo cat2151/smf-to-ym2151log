@@ -1,12 +1,6 @@
 """Unit tests for MIDI utility functions."""
 
-import pytest
-from src.midi_utils import (
-    midi_to_kc_kf,
-    ticks_to_seconds,
-    seconds_to_samples,
-    ticks_to_samples
-)
+from src.midi_utils import midi_to_kc_kf, seconds_to_samples, ticks_to_samples, ticks_to_seconds
 
 
 def test_midi_to_kc_kf_middle_c():
@@ -30,7 +24,7 @@ def test_midi_to_kc_kf_boundary():
     kc, kf = midi_to_kc_kf(0)
     assert isinstance(kc, int)
     assert kf == 0
-    
+
     # Test note 127 (max MIDI note)
     kc, kf = midi_to_kc_kf(127)
     assert isinstance(kc, int)
@@ -50,7 +44,7 @@ def test_seconds_to_samples():
     # 1 second at 55930 Hz should be 55930 samples
     samples = seconds_to_samples(1.0, 55930)
     assert samples == 55930
-    
+
     # 0.5 seconds should be 27965 samples
     samples = seconds_to_samples(0.5, 55930)
     assert samples == 27965

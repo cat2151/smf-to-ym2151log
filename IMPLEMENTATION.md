@@ -39,7 +39,7 @@ The YM2151 log JSON format matches the ym2151-zig-cc specification:
 {
   "event_count": 50,
   "events": [
-    {"time": 0, "addr": "0x08", "data": "0x00", "is_data": 0},
+    {"time": 0, "addr": "0x08", "data": "0x00"},
     ...
   ]
 }
@@ -49,7 +49,6 @@ The YM2151 log JSON format matches the ym2151-zig-cc specification:
 - `time`: Sample time (integer) at 55930 Hz
 - `addr`: YM2151 register address (hex string, e.g., "0x08")
 - `data`: Data to write (hex string, e.g., "0x00")
-- `is_data`: 0 for address write, 1 for data write
 
 ## Key Features
 
