@@ -9,6 +9,9 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   call-shared-workflow:
     uses: cat2151/github-actions/.github/workflows/translate-readme.yml@main
