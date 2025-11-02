@@ -57,3 +57,9 @@ When editing conversion logic, always keep the two-pass model intact: unit tests
 
 ---
 If any section is unclear or you want additional examples (e.g., common refactors or style choices), tell me which area to expand and I'll iterate.
+
+# userからの指示
+- commit前にruff formatとruff check --fixを実行する
+- 作業報告は、プルリクエストのコメントに書く。document作成禁止
+  - DRY原則に準拠し、「codeやbuild scriptと同じことを、documentに書いたせいで、そのdocumentが陳腐化してハルシネーションやuserレビューコスト増大や混乱ほか様々なトラブル原因になる」を防止する
+  - なおissue-notes/は、userがissueごとの意図を記録する用途で使う
