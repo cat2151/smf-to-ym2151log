@@ -45,7 +45,7 @@ The YM2151 log JSON follows this format:
 {
   "event_count": 50,
   "events": [
-    {"time": 0, "addr": "0x08", "data": "0x00", "is_data": 0},
+    {"time": 0, "addr": "0x08", "data": "0x00"},
     ...
   ]
 }
@@ -55,7 +55,6 @@ Where:
 - `time`: Sample time (integer, at 55930 Hz sample rate)
 - `addr`: YM2151 register address (hex string)
 - `data`: Data to write (hex string)
-- `is_data`: 0 for address write, 1 for data write
 
 ## Development
 

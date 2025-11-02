@@ -15,7 +15,7 @@ Key elements:
   - note_off: `{ 'type': 'note_off', 'ticks': <int>, 'channel': <int>, 'note': <int> }`
 
 - YM2151 output format (Pass B output JSON):
-  - Top-level: `{ 'event_count': <int>, 'events': [ {time, addr, data, is_data}, ... ] }` (`README.md`, tests)
+  - Top-level: `{ 'event_count': <int>, 'events': [ {time, addr, data}, ... ] }` (`README.md`, tests)
   - `time` is integer sample count (sample rate 55930 Hz is used by default in `midi_utils.ticks_to_samples`).
   - `addr` and `data` are hex strings like `'0x08'` or `'0xC7'` (see `src/ym2151_init.py` and `src/ym2151_converter.py`).
 
