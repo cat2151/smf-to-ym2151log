@@ -6,9 +6,6 @@ on:
     - cron: '0 22 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   call-daily-project-summary:
     uses: cat2151/github-actions/.github/workflows/daily-project-summary.yml@main
