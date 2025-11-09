@@ -2,6 +2,12 @@
 
 Convert Standard MIDI Files (SMF) to YM2151 register write log in JSON format.
 
+## 状況
+
+アーカイブします。後継のRust版を開発します。
+
+このリポジトリの用途は、Pythonによる最小限のコードを提供する用です。
+
 ## Features
 
 - **2-Pass Processing**:
